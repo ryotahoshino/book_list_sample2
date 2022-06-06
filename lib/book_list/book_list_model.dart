@@ -14,8 +14,9 @@ class BookListModel extends ChangeNotifier {
       Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
       final String title = data['title'];
       final String author = data['author'];
+      final String? imgURL = data['imgURL'];
       final String id = document.id;
-      return Book(title, author, id);
+      return Book(title, author, id, imgURL);
     }).toList();
 
       this.books = books;

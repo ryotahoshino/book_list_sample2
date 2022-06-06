@@ -2,7 +2,6 @@ import 'package:book_list_sample2/add_book/add_book_page.dart';
 import 'package:book_list_sample2/book_list/book_list_model.dart';
 import 'package:book_list_sample2/domain/book.dart';
 import 'package:book_list_sample2/edit_book/edit_book_page.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -25,6 +24,12 @@ class BookListPage extends StatelessWidget {
             }
             final List<Widget> widgets = books.map(
               (book) => Slidable(
+                child: ListTile(
+                  // ignore: unnecessary_null_comparison
+                  leading: book.imgURL != null ? Image.network(book.imgURL!) : null,
+                  title: Text(book.title),
+                  subtitle: Text(book.author),
+                ),
                 startActionPane: ActionPane(
                   motion: const ScrollMotion(),
                   dismissible: DismissiblePane(onDismissed: () {}),
@@ -62,10 +67,6 @@ class BookListPage extends StatelessWidget {
                         label: '編集',
                       ),
                     ],
-                ),
-                child: ListTile(
-                title: Text(book.title),
-                subtitle: Text(book.author),
                 ),
 
               ),
