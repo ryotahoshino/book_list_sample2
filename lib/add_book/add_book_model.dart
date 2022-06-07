@@ -1,10 +1,15 @@
-import 'package:book_list_sample2/domain/book.dart';
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class AddBookModel extends ChangeNotifier {
   String? title;
   String? author;
+  File? imageFile;
+
+  final picker = ImagePicker();
 
   Future addBook() async{
     if (title == null || title == ""){
@@ -19,4 +24,13 @@ class AddBookModel extends ChangeNotifier {
       'author': author,
     });
   }
+
+  Future pickImage() async {
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null){
+      imageFile = File(pickedFile.path);
+      notifyListeners();
+    }
+  }
 }
+
