@@ -14,51 +14,65 @@ class RegisterPage extends StatelessWidget {
         ),
         body: Center(
           child: Consumer<RegisterModel>(builder: (context, model, child) {
-            return Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                children: [
-                  TextField(
-                    controller: model.titleController,
-                    decoration: InputDecoration(
-                      hintText: 'メールアドレス',
+            return Stack(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: [
+                      TextField(
+                        controller: model.titleController,
+                        decoration: InputDecoration(
+                          hintText: 'メールアドレス',
+                        ),
+                        onChanged: (text){
+                          model.setEmail(text);
+                        },
+                      ),
+                      SizedBox(
+                        height: 8,
+                      ),
+                      TextField(
+                        controller: model.authorController,
+                        decoration: InputDecoration(
+                          hintText: 'パスワード',
+                        ),
+                        onChanged: (text){
+                          model.setPassword(text);
+                        },
+                      ),
+                      SizedBox(
+                        height: 24,
+                      ),
+                      ElevatedButton(
+                          onPressed: () async{
+                            model.startLoading();
+                            try{
+                              await model.signUp();
+                              Navigator.of(context).pop();
+                            } catch(e) {
+                              final snackBar = SnackBar(
+                                backgroundColor: Colors.red,
+                                content: Text(e.toString()),
+                              );
+                              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                            } finally {
+                              model.endLoading();
+                            }
+                          },
+                          child: Text('登録する'),
+                        ),
+                    ],
+                  ),
+                ),
+                if (model.isLoading)
+                  Container(
+                    color: Colors.black54,
+                    child: const Center(
+                      child: CircularProgressIndicator(),
                     ),
-                    onChanged: (text){
-                      model.setEmail(text);
-                    },
                   ),
-                  SizedBox(
-                    height: 8,
-                  ),
-                  TextField(
-                    controller: model.authorController,
-                    decoration: InputDecoration(
-                      hintText: 'パスワード',
-                    ),
-                    onChanged: (text){
-                      model.setPassword(text);
-                    },
-                  ),
-                  SizedBox(
-                    height: 24,
-                  ),
-                  ElevatedButton(
-                      onPressed: () async{
-                        try{
-                          await model.signUp();
-                          //Navigator.of(context).pop(model.title);
-                        } catch(e) {
-                          final snackBar = SnackBar(
-                            backgroundColor: Colors.red,
-                            content: Text(e.toString()),
-                          );
-                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                        }
-                      },
-                      child: Text('登録する'),
-                    ),
-                ],
-              ),
+              ],
             );
           }),
         ),

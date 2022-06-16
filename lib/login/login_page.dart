@@ -15,64 +15,79 @@ class LoginPage extends StatelessWidget {
         ),
         body: Center(
           child: Consumer<LoginModel>(builder: (context, model, child) {
-            return Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                children: [
-                  TextField(
-                    controller: model.titleController,
-                    decoration: const InputDecoration(
-                      hintText: 'メールアドレス',
-                    ),
-                    onChanged: (text){
-                      model.setEmail(text);
-                    },
-                  ),
-                  const SizedBox(
-                    height: 8,
-                  ),
-                  TextField(
-                    controller: model.authorController,
-                    decoration: const InputDecoration(
-                      hintText: 'パスワード',
-                    ),
-                    onChanged: (text){
-                      model.setPassword(text);
-                    },
-                  ),
-                  const SizedBox(
-                    height: 24,
-                  ),
-                  ElevatedButton(
-                    onPressed: () async{
-                      try{
-                        await model.signUp();
-                        //Navigator.of(context).pop(model.title);
-                      } catch(e) {
-                        final snackBar = SnackBar(
-                          backgroundColor: Colors.red,
-                          content: Text(e.toString()),
-                        );
-                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                      }
-                    },
-                    child: const Text('ログインする'),
-                  ),
-                  TextButton(
-                    onPressed: () async{
-                      //画面遷移
-                      final bool? added = await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => RegisterPage(),
-                          fullscreenDialog: true,
+            return Stack(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: [
+                      TextField(
+                        controller: model.titleController,
+                        decoration: const InputDecoration(
+                          hintText: 'メールアドレス',
                         ),
-                      );
-                    },
-                    child: const Text('新規登録の方はこちら'),
+                        onChanged: (text){
+                          model.setEmail(text);
+                        },
+                      ),
+                      const SizedBox(
+                        height: 8,
+                      ),
+                      TextField(
+                        controller: model.authorController,
+                        decoration: const InputDecoration(
+                          hintText: 'パスワード',
+                        ),
+                        onChanged: (text){
+                          model.setPassword(text);
+                        },
+                        obscureText: true,
+                      ),
+                      const SizedBox(
+                        height: 24,
+                      ),
+                      ElevatedButton(
+                        onPressed: () async{
+                          model.startLoading();
+                          try{
+                            await model.logIn();
+                            Navigator.of(context).pop();
+                          } catch(e) {
+                            final snackBar = SnackBar(
+                              backgroundColor: Colors.red,
+                              content: Text(e.toString()),
+                            );
+                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                          } finally{
+                            model.endLoading();
+                          }
+                        },
+                        child: const Text('ログインする'),
+                      ),
+                      TextButton(
+                        onPressed: () async{
+                          //画面遷移
+                          final bool? added = await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => RegisterPage(),
+                              fullscreenDialog: true,
+                            ),
+                          );
+                        },
+                        child: const Text('新規登録の方はこちら'),
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+                if (model.isLoading)
+                  Container(
+                    color: Colors.black54,
+                    child: const Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  ),
+              ],
             );
           }),
         ),
