@@ -2,7 +2,6 @@ import 'package:book_list_sample2/add_book/add_book_page.dart';
 import 'package:book_list_sample2/book_list/book_list_model.dart';
 import 'package:book_list_sample2/domain/book.dart';
 import 'package:book_list_sample2/edit_book/edit_book_page.dart';
-import 'package:book_list_sample2/login/login_model.dart';
 import 'package:book_list_sample2/login/login_page.dart';
 import 'package:book_list_sample2/mypage/my_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
