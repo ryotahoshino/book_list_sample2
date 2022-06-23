@@ -114,7 +114,7 @@ class BookListPage extends StatelessWidget {
                 );
 
                 if (added != null && added){
-                  final snackBar = SnackBar(
+                  const snackBar = SnackBar(
                     backgroundColor: Colors.green,
                     content: Text("本を追加しました"),
                   );
